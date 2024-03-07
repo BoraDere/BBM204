@@ -1,6 +1,3 @@
-import java.util.Arrays;
-import java.util.ArrayList;
-
 public class MergeSort {
 
     public static int[] mergeSort(int[] array) {
@@ -10,8 +7,13 @@ public class MergeSort {
             return array;
         }
 
-        int[] left = Arrays.copyOfRange(array, 0, n/2);
-        int[] right = Arrays.copyOfRange(array, n/2, n);
+        int mid = n / 2;
+
+        int[] left = new int[mid];
+        int[] right = new int[n - mid];
+
+        System.arraycopy(array, 0, left, 0, mid);
+        System.arraycopy(array, mid, right, 0, n - mid);
 
         left = mergeSort(left);
         right = mergeSort(right);
@@ -20,45 +22,26 @@ public class MergeSort {
     }
 
     static int[] merge(int[] A, int[] B) {
-        ArrayList<Integer> listA = new ArrayList<>();
+        int lenA = A.length;
+        int lenB = B.length;
 
-        for (int num : A) {
-            listA.add(num);
-        }
+        int[] C = new int[lenA + lenB];
+        int i = 0, j = 0, k = 0;
 
-        ArrayList<Integer> listB = new ArrayList<>();
-
-        for (int num : B) {
-            listB.add(num);
-        }
-
-        ArrayList<Integer> listC = new ArrayList<>();
-
-        while (!listA.isEmpty() && !listB.isEmpty()) {
-            if (listA.get(0) > listB.get(0)) {
-                listC.add(listB.get(0));
-                listB.remove(0);
-            }
-            else {
-                listC.add(listA.get(0));
-                listA.remove(0);
+        while (i < lenA && j < lenB) {
+            if (A[i] > B[j]) {
+                C[k++] = B[j++];
+            } else {
+                C[k++] = A[i++];
             }
         }
 
-        while (!listA.isEmpty()) {
-            listC.add(listA.get(0));
-            listA.remove(0);
+        while (i < lenA) {
+            C[k++] = A[i++];
         }
 
-        while (!listB.isEmpty()) {
-            listC.add(listB.get(0));
-            listB.remove(0);
-        }
-
-        int[] C = new int[listC.size()];
-
-        for (int i = 0; i < listC.size(); i++) {
-            C[i] = listC.get(i);
+        while (j < lenB) {
+            C[k++] = B[j++];
         }
 
         return C;
