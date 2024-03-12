@@ -61,12 +61,12 @@ public class Main {
         return arrays;
     }
 
-    static int[] insertionSorter(int[][] arrays) {
-        int[] results = new int[arrays.length];
+    static long[] insertionSorter(int[][] arrays) {
+        long[] results = new long[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            int result = 0;
+            long result = 0;
 
             for (int j = 0; j < 10; j++) {
                 Instant start = Instant.now();
@@ -85,12 +85,12 @@ public class Main {
         return results;
     }
 
-    static int[] mergeSorter(int[][] arrays) {
-        int[] results = new int[arrays.length];
+    static long[] mergeSorter(int[][] arrays) {
+        long[] results = new long[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            int result = 0;
+            long result = 0;
 
             for (int j = 0; j < 10; j++) {
                 Instant start = Instant.now();
@@ -121,12 +121,12 @@ public class Main {
         return max;
     }
 
-    static int[] countingSorter(int[][] arrays) {
-        int[] results = new int[arrays.length];
+    static long[] countingSorter(int[][] arrays) {
+        long[] results = new long[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            int result = 0;
+            long result = 0;
 
             for (int j = 0; j < 10; j++) {
                 Instant start = Instant.now();
@@ -155,12 +155,12 @@ public class Main {
         return temp;
     }
 
-    static int[] linearSearcher(int[][] arrays) {
-        int[] results = new int[arrays.length];
+    static long[] linearSearcher(int[][] arrays) {
+        long[] results = new long[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            int result = 0;
+            long result = 0;
 
             for (int j = 0; j < 1000; j++) {
                 int rnd  = new Random().nextInt(array.length);
@@ -182,12 +182,12 @@ public class Main {
         return results;
     }
 
-    static int[] binarySearcher(int[][] arrays) {
-        int[] results = new int[arrays.length];
+    static long[] binarySearcher(int[][] arrays) {
+        long[] results = new long[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            int result = 0;
+            long result = 0;
 
             for (int j = 0; j < 1000; j++) {
                 int rnd  = new Random().nextInt(array.length);
@@ -240,52 +240,78 @@ public class Main {
                 reverse(sortedArrays[9])
         };
 
-        int[] insertionRandomResults = insertionSorter(arrays);
-        int[] insertionSortedResults = insertionSorter(sortedArrays);
-        int[] insertionReverseResults = insertionSorter(reverseSortedArrays);
+        long[] insertionRandomResults = insertionSorter(arrays);
+        long[] insertionSortedResults = insertionSorter(sortedArrays);
+        long[] insertionReverseResults = insertionSorter(reverseSortedArrays);
 
-        int[] mergeRandomResults = mergeSorter(arrays);
-        int[] mergeSortedResults = mergeSorter(sortedArrays);
-        int[] mergeReverseResults = mergeSorter(reverseSortedArrays);
+        long[] mergeRandomResults = mergeSorter(arrays);
+        long[] mergeSortedResults = mergeSorter(sortedArrays);
+        long[] mergeReverseResults = mergeSorter(reverseSortedArrays);
 
-        int[] countRandomResults = countingSorter(arrays);
-        int[] countSortedResults = countingSorter(sortedArrays);
-        int[] countingReverseResults = countingSorter(reverseSortedArrays);
+        long[] countRandomResults = countingSorter(arrays);
+        long[] countSortedResults = countingSorter(sortedArrays);
+        long[] countReverseResults = countingSorter(reverseSortedArrays);
 
-        int[] linearRandomResults = linearSearcher(arrays);
-        int[] linearSortedResults = linearSearcher(sortedArrays);
-        int[] linearReverseResults = linearSearcher(reverseSortedArrays);
+        long[] linearRandomResults = linearSearcher(arrays);
+        long[] linearSortedResults = linearSearcher(sortedArrays);
+        long[] linearReverseResults = linearSearcher(reverseSortedArrays);
 
-        int[] binaryRandomResults = binarySearcher(arrays);
-        int[] binarySortedResults = binarySearcher(sortedArrays);
-        int[] binaryReverseResults = binarySearcher(reverseSortedArrays);
+        long[] binaryRandomResults = binarySearcher(arrays);
+        long[] binarySortedResults = binarySearcher(sortedArrays);
+        long[] binaryReverseResults = binarySearcher(reverseSortedArrays);
 
-        System.out.println("insertionRandomResults: " + Arrays.toString(insertionRandomResults));
-        System.out.println("insertionSortedResults: " + Arrays.toString(insertionSortedResults));
-        System.out.println("insertionReverseResults: " + Arrays.toString(insertionReverseResults));
+        System.out.println("Random Input Data Timing Results in ms:");
 
-        System.out.println();
-
-        System.out.println("mergeRandomResults: " + Arrays.toString(mergeRandomResults));
-        System.out.println("mergeSortedResults: " + Arrays.toString(mergeSortedResults));
-        System.out.println("mergeReverseResults: " + Arrays.toString(mergeReverseResults));
+        for (long i = 0; i < 39; i++) {
+            System.out.print("-");
+        }
 
         System.out.println();
 
-        System.out.println("countRandomResults: " + Arrays.toString(countRandomResults));
-        System.out.println("countSortedResults: " + Arrays.toString(countSortedResults));
-        System.out.println("countingReverseResults: " + Arrays.toString(countingReverseResults));
+        System.out.println("Insertion Sort: " + Arrays.toString(insertionRandomResults));
+        System.out.println("Merge Sort: " + Arrays.toString(mergeRandomResults));
+        System.out.println("Counting Sort: " + Arrays.toString(countRandomResults));
 
         System.out.println();
 
-        System.out.println("linearRandomResults: " + Arrays.toString(linearRandomResults));
-        System.out.println("linearSortedResults: " + Arrays.toString(linearSortedResults));
-        System.out.println("linearReverseResults: " + Arrays.toString(linearReverseResults));
+        System.out.println("Sorted Input Data Timing Results in ms:");
+
+        for (int i = 0; i < 39; i++) {
+            System.out.print("-");
+        }
 
         System.out.println();
 
-        System.out.println("binaryRandomResults: " + Arrays.toString(binaryRandomResults));
-        System.out.println("binarySortedResults: " + Arrays.toString(binarySortedResults));
-        System.out.println("binaryReverseResults: " + Arrays.toString(binaryReverseResults));
+        System.out.println("Insertion Sort: " + Arrays.toString(insertionSortedResults));
+        System.out.println("Merge Sort: " + Arrays.toString(mergeSortedResults));
+        System.out.println("Counting Sort: " + Arrays.toString(countSortedResults));
+
+        System.out.println();
+
+        System.out.println("Reversely Sorted Input Data Timing Results in ms:");
+
+        for (int i = 0; i < 49; i++) {
+            System.out.print("-");
+        }
+
+        System.out.println();
+
+        System.out.println("Insertion Sort: " + Arrays.toString(insertionReverseResults));
+        System.out.println("Merge Sort: " + Arrays.toString(mergeReverseResults));
+        System.out.println("Counting Sort: " + Arrays.toString(countReverseResults));
+
+        System.out.println();
+
+        System.out.println("Experiments with Searching Algorithms:");
+
+        for (int i = 0; i < 38; i++) {
+            System.out.print("-");
+        }
+
+        System.out.println();
+
+        System.out.println("Linear Search (random data): " + Arrays.toString(linearRandomResults));
+        System.out.println("Linear Search (sorted data): " + Arrays.toString(linearSortedResults));
+        System.out.println("Binary Search (sorted data)" + Arrays.toString(binarySortedResults));
     }
 }
