@@ -254,11 +254,11 @@ public class Main {
 
         long[] linearRandomResults = linearSearcher(arrays);
         long[] linearSortedResults = linearSearcher(sortedArrays);
-        long[] linearReverseResults = linearSearcher(reverseSortedArrays);
+        // long[] linearReverseResults = linearSearcher(reverseSortedArrays);
 
-        long[] binaryRandomResults = binarySearcher(arrays);
+        // long[] binaryRandomResults = binarySearcher(arrays);
         long[] binarySortedResults = binarySearcher(sortedArrays);
-        long[] binaryReverseResults = binarySearcher(reverseSortedArrays);
+        // long[] binaryReverseResults = binarySearcher(reverseSortedArrays);
 
         System.out.println("Random Input Data Timing Results in ms:");
 
