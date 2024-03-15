@@ -5,6 +5,9 @@ import java.util.Random;
 import java.util.Scanner;
 import java.time.Instant;
 import java.time.Duration;
+import org.knowm.xchart.*;
+import org.knowm.xchart.style.Styler;
+import java.io.IOException;
 
 public class Main {
     static int countLines(String filePath) throws FileNotFoundException {
@@ -61,12 +64,12 @@ public class Main {
         return arrays;
     }
 
-    static long[] insertionSorter(int[][] arrays) {
-        long[] results = new long[arrays.length];
+    static double[] insertionSorter(int[][] arrays) {
+        double[] results = new double[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            long result = 0;
+            double result = 0;
 
             for (int j = 0; j < 10; j++) {
                 Instant start = Instant.now();
@@ -76,7 +79,7 @@ public class Main {
                 Instant end = Instant.now();
 
                 long elapsed = Duration.between(start, end).toMillis();
-                result += elapsed / 10;
+                result += (double) elapsed / 10;
             }
 
             results[i] = result;
@@ -85,12 +88,12 @@ public class Main {
         return results;
     }
 
-    static long[] mergeSorter(int[][] arrays) {
-        long[] results = new long[arrays.length];
+    static double[] mergeSorter(int[][] arrays) {
+        double[] results = new double[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            long result = 0;
+            double result = 0;
 
             for (int j = 0; j < 10; j++) {
                 Instant start = Instant.now();
@@ -100,7 +103,7 @@ public class Main {
                 Instant end = Instant.now();
 
                 long elapsed = Duration.between(start, end).toMillis();
-                result += elapsed / 10;
+                result += (double) elapsed / 10;
             }
 
             results[i] = result;
@@ -121,12 +124,12 @@ public class Main {
         return max;
     }
 
-    static long[] countingSorter(int[][] arrays) {
-        long[] results = new long[arrays.length];
+    static double[] countingSorter(int[][] arrays) {
+        double[] results = new double[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            long result = 0;
+            double result = 0;
 
             for (int j = 0; j < 10; j++) {
                 Instant start = Instant.now();
@@ -136,7 +139,7 @@ public class Main {
                 Instant end = Instant.now();
 
                 long elapsed = Duration.between(start, end).toMillis();
-                result += elapsed / 10;
+                result += (double) elapsed / 10;
             }
 
             results[i] = result;
@@ -155,12 +158,12 @@ public class Main {
         return temp;
     }
 
-    static long[] linearSearcher(int[][] arrays) {
-        long[] results = new long[arrays.length];
+    static double[] linearSearcher(int[][] arrays) {
+        double[] results = new double[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            long result = 0;
+            double result = 0;
 
             for (int j = 0; j < 1000; j++) {
                 int rnd  = new Random().nextInt(array.length);
@@ -173,7 +176,7 @@ public class Main {
                 Instant end = Instant.now();
 
                 long elapsed = Duration.between(start, end).toNanos();
-                result += elapsed / 1000;
+                result += (double) elapsed / 1000;
             }
 
             results[i] = result;
@@ -182,12 +185,12 @@ public class Main {
         return results;
     }
 
-    static long[] binarySearcher(int[][] arrays) {
-        long[] results = new long[arrays.length];
+    static double[] binarySearcher(int[][] arrays) {
+        double[] results = new double[arrays.length];
 
         for (int i = 0; i < arrays.length; i++) {
             int[] array = arrays[i];
-            long result = 0;
+            double result = 0;
 
             for (int j = 0; j < 1000; j++) {
                 int rnd  = new Random().nextInt(array.length);
@@ -200,7 +203,7 @@ public class Main {
                 Instant end = Instant.now();
 
                 long elapsed = Duration.between(start, end).toNanos();
-                result += elapsed / 1000;
+                result += (double) elapsed / 1000;
             }
 
             results[i] = result;
@@ -209,10 +212,35 @@ public class Main {
         return results;
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void showAndSaveChart(String title, int[] xAxis, double[][] yAxis) throws IOException {
+        // Create Chart
+        XYChart chart = new XYChartBuilder().width(800).height(600).title(title)
+                .yAxisTitle("Time in Milliseconds").xAxisTitle("Input Size").build();
+
+        // Convert x axis to double[]
+        double[] doubleX = Arrays.stream(xAxis).asDoubleStream().toArray();
+
+        // Customize Chart
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNE);
+        chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+
+        // Add a plot for a sorting algorithm
+        chart.addSeries("insertionRandomResults", doubleX, yAxis[0]);
+        chart.addSeries("mergeRandomResults", doubleX, yAxis[1]);
+        chart.addSeries("countRandomResults", doubleX, yAxis[2]);
+
+//        // Save the chart as PNG
+//        BitmapEncoder.saveBitmap(chart, title + ".png", BitmapEncoder.BitmapFormat.PNG);
+//
+        // Show the chart
+        new SwingWrapper(chart).displayChart();
+    }
+
+    public static void main(String[] args) throws IOException{
         String filePath = args[0];
 
         int[][] arrays = arrayReturner(filePath); // 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 250000
+        int[] xAxis = {500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 250000};
 
         int[][] sortedArrays = {
                 MergeSort.mergeSort(arrays[0]),
@@ -240,24 +268,24 @@ public class Main {
                 reverse(sortedArrays[9])
         };
 
-        long[] insertionRandomResults = insertionSorter(arrays);
-        long[] insertionSortedResults = insertionSorter(sortedArrays);
-        long[] insertionReverseResults = insertionSorter(reverseSortedArrays);
+        double[] insertionRandomResults = insertionSorter(arrays);
+        double[] insertionSortedResults = insertionSorter(sortedArrays);
+        double[] insertionReverseResults = insertionSorter(reverseSortedArrays);
 
-        long[] mergeRandomResults = mergeSorter(arrays);
-        long[] mergeSortedResults = mergeSorter(sortedArrays);
-        long[] mergeReverseResults = mergeSorter(reverseSortedArrays);
+        double[] mergeRandomResults = mergeSorter(arrays);
+        double[] mergeSortedResults = mergeSorter(sortedArrays);
+        double[] mergeReverseResults = mergeSorter(reverseSortedArrays);
 
-        long[] countRandomResults = countingSorter(arrays);
-        long[] countSortedResults = countingSorter(sortedArrays);
-        long[] countReverseResults = countingSorter(reverseSortedArrays);
+        double[] countRandomResults = countingSorter(arrays);
+        double[] countSortedResults = countingSorter(sortedArrays);
+        double[] countReverseResults = countingSorter(reverseSortedArrays);
 
-        long[] linearRandomResults = linearSearcher(arrays);
-        long[] linearSortedResults = linearSearcher(sortedArrays);
+        double[] linearRandomResults = linearSearcher(arrays);
+        double[] linearSortedResults = linearSearcher(sortedArrays);
         // long[] linearReverseResults = linearSearcher(reverseSortedArrays);
 
         // long[] binaryRandomResults = binarySearcher(arrays);
-        long[] binarySortedResults = binarySearcher(sortedArrays);
+        double[] binarySortedResults = binarySearcher(sortedArrays);
         // long[] binaryReverseResults = binarySearcher(reverseSortedArrays);
 
         System.out.println("Random Input Data Timing Results in ms:");
@@ -313,5 +341,12 @@ public class Main {
         System.out.println("Linear Search (random data): " + Arrays.toString(linearRandomResults));
         System.out.println("Linear Search (sorted data): " + Arrays.toString(linearSortedResults));
         System.out.println("Binary Search (sorted data)" + Arrays.toString(binarySortedResults));
+
+        double[][] yAxis = new double[3][10];
+        yAxis[0] = insertionRandomResults;
+        yAxis[1] = mergeRandomResults;
+        yAxis[2] = countRandomResults;
+
+        showAndSaveChart("Sample Test", xAxis, yAxis);
     }
 }
