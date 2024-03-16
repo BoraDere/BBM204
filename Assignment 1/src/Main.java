@@ -212,10 +212,10 @@ public class Main {
         return results;
     }
 
-    public static void showAndSaveChart(String title, int[] xAxis, double[][] yAxis) throws IOException {
+    public static void showAndSaveChart(String title, int[] xAxis, double[][] yAxis, String[] names, String time) throws IOException {
         // Create Chart
         XYChart chart = new XYChartBuilder().width(800).height(600).title(title)
-                .yAxisTitle("Time in Milliseconds").xAxisTitle("Input Size").build();
+                .yAxisTitle("Time in " + time).xAxisTitle("Input Size").build();
 
         // Convert x axis to double[]
         double[] doubleX = Arrays.stream(xAxis).asDoubleStream().toArray();
@@ -225,13 +225,13 @@ public class Main {
         chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
 
         // Add a plot for a sorting algorithm
-        chart.addSeries("insertionRandomResults", doubleX, yAxis[0]);
-        chart.addSeries("mergeRandomResults", doubleX, yAxis[1]);
-        chart.addSeries("countRandomResults", doubleX, yAxis[2]);
+        for (int i = 0; i < names.length; i++) {
+            chart.addSeries(names[i], doubleX, yAxis[i]);
+        }
 
-//        // Save the chart as PNG
-//        BitmapEncoder.saveBitmap(chart, title + ".png", BitmapEncoder.BitmapFormat.PNG);
-//
+        // Save the chart as PNG
+        BitmapEncoder.saveBitmap(chart, title + ".png", BitmapEncoder.BitmapFormat.PNG);
+
         // Show the chart
         new SwingWrapper(chart).displayChart();
     }
@@ -342,11 +342,22 @@ public class Main {
         System.out.println("Linear Search (sorted data): " + Arrays.toString(linearSortedResults));
         System.out.println("Binary Search (sorted data)" + Arrays.toString(binarySortedResults));
 
-        double[][] yAxis = new double[3][10];
-        yAxis[0] = insertionRandomResults;
-        yAxis[1] = mergeRandomResults;
-        yAxis[2] = countRandomResults;
+        double[][] randoms = {insertionRandomResults, mergeRandomResults, countRandomResults};
+        String[] sortNames = {"Insertion Sort", "Merge Sort", "Counting Sort"};
 
-        showAndSaveChart("Sample Test", xAxis, yAxis);
+        showAndSaveChart("Test on Random Data", xAxis, randoms, sortNames, "Milliseconds");
+
+        double[][] sorteds = {insertionSortedResults, mergeSortedResults, countSortedResults};
+
+        showAndSaveChart("Test on Sorted Data", xAxis, sorteds, sortNames, "Milliseconds");
+
+        double[][] reverses = {insertionReverseResults, mergeReverseResults, countReverseResults};
+
+        showAndSaveChart("Test on Reversely Sorted Data", xAxis, reverses, sortNames, "Milliseconds");
+
+        double[][] searches = {linearRandomResults, linearSortedResults, binarySortedResults};
+        String[] searchNames = {"Linear Search (random)", "Linear Search (sorted)", "Binary Search (sorted)"};
+
+        showAndSaveChart("Test on Search Algorithms", xAxis, searches, searchNames, "Nanoseconds");
     }
 }
