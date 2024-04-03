@@ -24,7 +24,7 @@ public class PowerGridOptimization {
      *
      * @return OptimalPowerGridSolution
      */
-    public OptimalPowerGridSolution GetOptimalPowerGridSolutionDP() {
+    public OptimalPowerGridSolution getOptimalPowerGridSolutionDP() {
         int n = amountOfEnergyDemandsArrivingPerHour.size();
         int[] sol = new int[n + 1];
         ArrayList<ArrayList<Integer>> hours = new ArrayList<>(n + 1);

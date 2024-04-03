@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 /**
@@ -43,7 +44,37 @@ public class OptimalESVDeploymentGP
     public int getMinNumESVsToDeploy(int maxNumberOfAvailableESVs, int maxESVCapacity)
     {
         // TODO: Your code goes here
-        return -1;
+        ArrayList<Integer> tasks = new ArrayList<>(maintenanceTaskEnergyDemands);
+        tasks.sort(Collections.reverseOrder());
+
+        ArrayList<Integer> ESVRemainingCapacities = new ArrayList<>(Collections.nCopies(maxNumberOfAvailableESVs, maxESVCapacity));
+
+        int minNumESVsToDeploy = 0;
+
+        for (int taskEnergy : tasks) {
+            boolean taskAssigned = false;
+            for (int i = 0; i < minNumESVsToDeploy; i++) {
+                if (ESVRemainingCapacities.get(i) >= taskEnergy) {
+                    ESVRemainingCapacities.set(i, ESVRemainingCapacities.get(i) - taskEnergy);
+                    maintenanceTasksAssignedToESVs.get(i).add(taskEnergy);
+                    taskAssigned = true;
+                    break;
+                }
+            }
+
+            if (!taskAssigned) {
+                if (minNumESVsToDeploy == maxNumberOfAvailableESVs) {
+                    return -1;
+                }
+                ESVRemainingCapacities.set(minNumESVsToDeploy, maxESVCapacity - taskEnergy);
+                ArrayList<Integer> newESV = new ArrayList<>();
+                newESV.add(taskEnergy);
+                maintenanceTasksAssignedToESVs.add(newESV);
+                minNumESVsToDeploy++;
+            }
+        }
+
+        return minNumESVsToDeploy;
     }
 
 }
