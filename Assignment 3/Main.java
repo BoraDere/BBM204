@@ -27,6 +27,13 @@ public class Main {
         humanData.printMolecularStructures(molecularStructuresHuman, "typical humans");
         vitalesData.printMolecularStructures(molecularStructuresVitales, "Vitales individuals");
 
+        /*
+         * 
+         * 
+         * 
+         */
+        
+
         // Identify anomalies in human data compared to Vitales data
         ArrayList<MolecularStructure> anomalies = MolecularData.getVitalesAnomaly(molecularStructuresHuman, molecularStructuresVitales);
         humanData.printVitalesAnomaly(anomalies);
