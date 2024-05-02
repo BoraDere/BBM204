@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 // Class representing the Mission Synthesis
 public class MissionSynthesis {
@@ -15,50 +16,77 @@ public class MissionSynthesis {
 
     // Method to synthesize bonds for the serum
     public List<Bond> synthesizeSerum() {
+        List<Molecule> selectedMolecules = new ArrayList<>();
+        
+        for (MolecularStructure structure : humanStructures) {
+            selectedMolecules.add(structure.getMoleculeWithWeakestBondStrength());
+        }
+        
+        for (MolecularStructure structure : diffStructures) {
+            selectedMolecules.add(structure.getMoleculeWithWeakestBondStrength());
+        }
+    
+        List<Bond> potentialBonds = new ArrayList<>();
+        for (int i = 0; i < selectedMolecules.size(); i++) {
+            for (int j = i + 1; j < selectedMolecules.size(); j++) {
+                Molecule molecule1 = selectedMolecules.get(i);
+                Molecule molecule2 = selectedMolecules.get(j);
+                double bondStrength = ((double) molecule1.getBondStrength() + molecule2.getBondStrength()) / 2; // WHY PRECISION LOSS
+                Bond bond = new Bond(molecule1, molecule2, bondStrength);
+                potentialBonds.add(bond);
+            }
+        }
+    
+        Collections.sort(potentialBonds, Comparator.comparing(Bond::getWeight));
+    
         List<Bond> serum = new ArrayList<>();
-
-        /* YOUR CODE HERE */ 
-
+        int[] parent = new int[selectedMolecules.size()];
+        for (int i = 0; i < parent.length; i++) {
+            parent[i] = i;
+        }
+    
+        for (Bond bond : potentialBonds) {
+            int i = selectedMolecules.indexOf(bond.getFrom());
+            int j = selectedMolecules.indexOf(bond.getTo());
+            int rootI = find(parent, i);
+            int rootJ = find(parent, j);
+            if (rootI != rootJ) {
+                parent[rootI] = rootJ;
+                serum.add(bond);
+            }
+        }
+    
         return serum;
+    }
+    
+    private int find(int[] parent, int i) {
+        if (parent[i] != i) {
+            parent[i] = find(parent, parent[i]);
+        }
+        return parent[i];
     }
 
     // Method to print the synthesized bonds
     public void printSynthesis(List<Bond> serum) {
+        List<Molecule> selectedHumanMolecules = humanStructures.stream()
+            .map(MolecularStructure::getMoleculeWithWeakestBondStrength)
+            .collect(Collectors.toList());
 
-        /* YOUR CODE HERE */ 
+        List<Molecule> selectedDiffMolecules = diffStructures.stream()
+            .map(MolecularStructure::getMoleculeWithWeakestBondStrength)
+            .collect(Collectors.toList());
 
+        System.out.println("Typical human molecules selected for synthesis: " + selectedHumanMolecules);
+        System.out.println("Vitales molecules selected for synthesis: " + selectedDiffMolecules);
+        System.out.println("Synthesizing the serum...");
+
+        double totalStrength = 0;
+
+        for (Bond bond : serum) {
+            System.out.printf("Forming a bond between %s - %s with strength %.2f%n", bond.getFrom(), bond.getTo(), bond.getWeight());
+            totalStrength += bond.getWeight();
+        }
+        
+        System.out.printf("The total serum bond strength is %.2f%n", totalStrength);
     }
 }
-
-/*
- * ok now here is the second part of the assignment. i will give you the explanation, then the codes and ask some parts of it:
-
-2 Part II - Mission Synthesis
-In the second mission, your task is to develop an algorithm for synthesizing an immunizer serum, leveraging
-unique Vitales molecular compounds to enhance the immune response in typical humans.
-
-2.1 Background Information and Objectives
-Initial attempts to inject typical humans with Vitales’ unique molecular compounds resulted in severe allergic
-reactions. However, it was found that synthesizing a serum using typical human molecular structures as a base,
-with the addition of Vitales’ immunizing compounds, significantly improved the human body’s acceptance.
-A critical challenge emerged: if the bond between typical human and Vitales molecular structures is overly
-strong, the serum’s efficacy is compromised. This is because the Vitales compounds fail to detach from the
-human compounds, rendering them ineffective.
-To address this, the serum must be synthesized by linking individual human molecular structures (serving as the
-base) with Vitales structures known for their immunizing properties. The focus will be on utilizing molecules
-with the lowest bond strength within each structure as the bonding points. This strategy ensures the serum
-can easily break down once administered, allowing the Vitales compounds to exert their beneficial effects. For
-this reason, the molecule with the lowest bond strength should be chosen as the bonding point for
-each molecular structure.
-
-When two molecules, i and j, form a bond, the resulting bond strength is calculated as the average of their
-individual bond strengths.
-Your mission is to develop an algorithm that will synthesize a new serum by identifying which bonds should be
-formed among the identified typical human molecular structures and the unique Vitales moluecular structures.
-In other words, your algorithm will determine which bonds will be chosen among the molecules with the lowest
-bond strength in each molecular structure to comprise the newly formed molecular compound, i.e., serum, such
-that the overall bond strength will be minimum. The serum will be fully synthesized when each molecular
-structure is linked to this new compound structure via a bond to some other molecular structure
-in this serum. Note that by forming a bond between two molecules in two separate molecular structure, we
-obtain a new compound molecular structure.
- */

@@ -16,20 +16,10 @@ public class MolecularData {
         return molecules;
     }
 
-    private void dfs(Molecule molecule, Map<String, Molecule> moleculeMap, Set<String> visited, MolecularStructure structure) {
-        visited.add(molecule.getId());
-        structure.addMolecule(molecule);
-    
-        for (String bond : molecule.getBonds()) {
-            if (!visited.contains(bond)) {
-                dfs(moleculeMap.get(bond), moleculeMap, visited, structure);
-            }
-        }
-    }
-
     public List<MolecularStructure> identifyMolecularStructures() {
-        Map<String, MolecularStructure> structureMap = new HashMap<>();
         Map<String, Molecule> moleculeMap = new HashMap<>();
+        Map<String, MolecularStructure> structureMap = new HashMap<>();
+        List<MolecularStructure> structures = new ArrayList<>();
         Set<String> visited = new HashSet<>();
     
         for (Molecule molecule : this.molecules) {
@@ -38,24 +28,35 @@ public class MolecularData {
     
         for (Molecule molecule : this.molecules) {
             if (!visited.contains(molecule.getId())) {
-                MolecularStructure structure = null;
-                for (String bond : molecule.getBonds()) {
-                    if (structureMap.containsKey(bond)) {
-                        structure = structureMap.get(bond);
-                        break;
-                    }
-                }
-    
-                if (structure == null) {
-                    structure = new MolecularStructure();
-                }
-    
-                dfs(molecule, moleculeMap, visited, structure);
-                structureMap.put(molecule.getId(), structure);
+                MolecularStructure structure = new MolecularStructure();
+                structures.add(structure);
+                dfs(molecule, moleculeMap, visited, structure, structureMap, structures);
             }
         }
     
-        return new ArrayList<>(new HashSet<>(structureMap.values()));
+        return structures;
+    }
+    
+    private void dfs(Molecule molecule, Map<String, Molecule> moleculeMap, Set<String> visited, MolecularStructure structure, Map<String, MolecularStructure> structureMap, List<MolecularStructure> structures) {
+        visited.add(molecule.getId());
+        structure.addMolecule(molecule);
+        structureMap.put(molecule.getId(), structure);
+    
+        for (String bondedMoleculeId : molecule.getBonds()) {
+            Molecule bondedMolecule = moleculeMap.get(bondedMoleculeId);
+            if (bondedMolecule != null && !visited.contains(bondedMolecule.getId())) {
+                dfs(bondedMolecule, moleculeMap, visited, structure, structureMap, structures);
+            } 
+            
+            else if (bondedMolecule != null && structureMap.get(bondedMoleculeId) != structure) {
+                structures.remove(structureMap.get(bondedMoleculeId));
+                structure.getMolecules().addAll(structureMap.get(bondedMoleculeId).getMolecules());
+                
+                for (Molecule m : structureMap.get(bondedMoleculeId).getMolecules()) {
+                    structureMap.put(m.getId(), structure);
+                }
+            }
+        }
     }
 
     // Method to print given molecular structures
@@ -84,7 +85,8 @@ public class MolecularData {
     public void printVitalesAnomaly(List<MolecularStructure> molecularStructures) {
         System.out.println("Molecular structures unique to Vitales individuals:");
         for (int i = 0; i < molecularStructures.size(); i++) {
-            System.out.println(molecularStructures.get(i).getMolecules());
+            MolecularStructure structure = molecularStructures.get(i);
+            System.out.println(structure.toString());
         }
     }
 }
