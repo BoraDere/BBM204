@@ -128,6 +128,22 @@ public class HyperloopTrainNetwork implements Serializable {
         return content;
     }
 
+    public double getWalkingTime(Station station1, Station station2) {
+        double distance = getDistance(station1, station2);
+        return distance / averageWalkingSpeed;
+    }
+    
+    public double getTrainRideTime(Station station1, Station station2) {
+        double distance = getDistance(station1, station2);
+        return distance / averageTrainSpeed;
+    }
+    
+    public double getDistance(Station station1, Station station2) {
+        // This method should return the distance between the two stations.
+        // You need to implement this method based on your data structure.
+        return Math.abs(station1.coordinates.x - station2.coordinates.x) + Math.abs(station1.coordinates.y - station2.coordinates.y);
+    }
+
     /**
      * Function to populate the given instance variables of this class by calling the functions above.
      */

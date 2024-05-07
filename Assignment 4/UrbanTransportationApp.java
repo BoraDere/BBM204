@@ -11,6 +11,7 @@ class UrbanTransportationApp implements Serializable {
         return hyperloopTrainNetwork;
     }
 
+
     /**
      * Function calculate the fastest route from the user's desired starting point to 
      * the desired destination point, taking into consideration the hyperloop train
@@ -29,8 +30,19 @@ class UrbanTransportationApp implements Serializable {
      * Function to print the route directions to STDOUT
      */
     public void printRouteDirections(List<RouteDirection> directions) {
+        double totalDuration = 0;
+        for (RouteDirection direction : directions) {
+            totalDuration += direction.duration;
+        }
+        System.out.printf("Total duration: %.2f minutes.\n", totalDuration);
+        System.out.println("Directions");
+        System.out.println("----------");
         
-        // TODO: Your code goes here
-
+        int step = 1;
+        for (RouteDirection direction : directions) {
+            String mode = direction.trainRide ? "Get on the train" : "Walk";
+            // if station name is STATION 1
+            System.out.printf("%d. %s from \"%s\" to \"%s\" for %.2f minutes.\n", step++, mode, direction.startStationName, direction.endStationName, direction.duration);
+        }
     }
 }
