@@ -1,4 +1,4 @@
-num_train_lines = 3
+num_train_lines = 2
 starting_point= (0, 0 )
 destination_point =(10000 ,1000)
 average_train_speed = 400.00

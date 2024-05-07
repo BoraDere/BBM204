@@ -36,7 +36,6 @@ public class Project implements Serializable {
         int[] schedule = new int[tasks.size()];
         int[] taskEndTimes = new int[tasks.size()];
     
-        // Sort the tasks in topological order
         List<Task> sortedTasks = topologicalSort(tasks);
     
         for (Task t : sortedTasks) {

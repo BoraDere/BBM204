@@ -17,6 +17,15 @@ public class Main {
         System.out.println("### URBAN TRANSPORTATION APP START ###");
         UrbanTransportationApp urbanTransportationApp = new UrbanTransportationApp();
         HyperloopTrainNetwork network = urbanTransportationApp.readHyperloopTrainNetwork(args[1]);
+
+        // System.out.println("Average Train Speed: " + network.averageTrainSpeed);
+        // System.out.println("Average Walking Speed: " + network.averageWalkingSpeed);
+        // System.out.println("Number of Train Lines: " + network.numTrainLines);
+        // System.out.println("Start Point: " + network.startPoint);
+        // System.out.println("Destination Point: " + network.destinationPoint);
+        // System.out.println("Lines: " + network.lines);
+        // THEY WORK AS EXPECTED
+
         List<RouteDirection> directions = urbanTransportationApp.getFastestRouteDirections(network);
         urbanTransportationApp.printRouteDirections(directions);
         System.out.println("### URBAN TRANSPORTATION APP END ###");
