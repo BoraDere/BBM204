@@ -8,11 +8,11 @@ public class Main {
         Locale locale = new Locale("en_EN"); 
         Locale.setDefault(locale);
 
-        // System.out.println("### URBAN INFRASTRUCTURE DEVELOPMENT START ###");
-        // UrbanInfrastructureDevelopment urbanInfrastructureDevelopment = new UrbanInfrastructureDevelopment();
-        // List<Project> projectList = urbanInfrastructureDevelopment.readXML(args[0]);
-        // urbanInfrastructureDevelopment.printSchedule(projectList);
-        // System.out.println("### URBAN INFRASTRUCTURE DEVELOPMENT END ###");
+        System.out.println("### URBAN INFRASTRUCTURE DEVELOPMENT START ###");
+        UrbanInfrastructureDevelopment urbanInfrastructureDevelopment = new UrbanInfrastructureDevelopment();
+        List<Project> projectList = urbanInfrastructureDevelopment.readXML(args[0]);
+        urbanInfrastructureDevelopment.printSchedule(projectList);
+        System.out.println("### URBAN INFRASTRUCTURE DEVELOPMENT END ###");
 
         System.out.println("### URBAN TRANSPORTATION APP START ###");
         UrbanTransportationApp urbanTransportationApp = new UrbanTransportationApp();
@@ -31,4 +31,3 @@ public class Main {
         System.out.println("### URBAN TRANSPORTATION APP END ###");
     }
 }
-

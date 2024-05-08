@@ -17,13 +17,16 @@ public class Project implements Serializable {
     public int getProjectDuration() {
         int[] schedule = getEarliestSchedule();
         int projectDuration = 0;
+
         for (int i = 0; i < tasks.size(); i++) {
             Task t = tasks.get(i);
             int endTime = schedule[i] + t.getDuration();
+
             if (endTime > projectDuration) {
                 projectDuration = endTime;
             }
         }
+
         return projectDuration;
     }
 
@@ -43,6 +46,7 @@ public class Project implements Serializable {
     
             for (int dependency : t.getDependencies()) {
                 int dependencyEndTime = taskEndTimes[dependency];
+
                 if (dependencyEndTime > earliestStart) {
                     earliestStart = dependencyEndTime;
                 }
@@ -70,6 +74,7 @@ public class Project implements Serializable {
     
     private void dfs(int i, boolean[] visited, List<Task> sortedTasks) {
         visited[i] = true;
+        
         for (int dependency : tasks.get(i).getDependencies()) {
             if (!visited[dependency]) {
                 dfs(dependency, visited, sortedTasks);

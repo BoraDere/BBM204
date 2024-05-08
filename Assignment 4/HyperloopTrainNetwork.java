@@ -65,8 +65,9 @@ public class HyperloopTrainNetwork implements Serializable {
             int y = Integer.parseInt(matcher.group(2));
     
             return new Point(x, y);
-        } else {
-            throw new IllegalArgumentException("Could not parse point from line: " + fileContent);
+        } 
+        else {
+            throw new IllegalArgumentException("Line: " + fileContent);
         }
     }
     
@@ -84,10 +85,9 @@ public class HyperloopTrainNetwork implements Serializable {
             int y = Integer.parseInt(matcher.group(2));
     
             stations.add(new Station(new Point(x, y), "Station " + stationNumber));
-    
             stationNumber++;
         }
-    
+
         return stations;
     }
 
@@ -102,15 +102,14 @@ public class HyperloopTrainNetwork implements Serializable {
         String trainLineName = null;
     
         for (String line : fileContent.split("\n")) {
-
                 if (line.contains("train_line_name")) {
                     trainLineName = getStringVar("train_line_name", line);
                 } 
+
                 else if (line.contains("train_line_stations")) {
                     List<Station> stations = getStations(line);
                     trainLines.add(new TrainLine(trainLineName, stations));
                 }
-            
         }
     
         return trainLines;
@@ -118,6 +117,7 @@ public class HyperloopTrainNetwork implements Serializable {
 
     public String readFile(String filename) {
         String content = "";
+
         try {
             content = new String(Files.readAllBytes(Paths.get(filename)));
         } 
@@ -126,22 +126,6 @@ public class HyperloopTrainNetwork implements Serializable {
         }
 
         return content;
-    }
-
-    public double getWalkingTime(Station station1, Station station2) {
-        double distance = getDistance(station1, station2);
-        return distance / averageWalkingSpeed;
-    }
-    
-    public double getTrainRideTime(Station station1, Station station2) {
-        double distance = getDistance(station1, station2);
-        return distance / averageTrainSpeed;
-    }
-    
-    public double getDistance(Station station1, Station station2) {
-        // This method should return the distance between the two stations.
-        // You need to implement this method based on your data structure.
-        return Math.abs(station1.coordinates.x - station2.coordinates.x) + Math.abs(station1.coordinates.y - station2.coordinates.y);
     }
 
     /**
@@ -154,7 +138,6 @@ public class HyperloopTrainNetwork implements Serializable {
         String fileContent = readFile(filename);
 
         StringBuilder trainLinesAndStations = new StringBuilder();
-
 
          for (String line : fileContent.split("\n")) {
                 if (line.contains("num_train_lines")) {
@@ -175,6 +158,5 @@ public class HyperloopTrainNetwork implements Serializable {
         }
 
         lines = getTrainLines(trainLinesAndStations.toString());
-
     }
 }
