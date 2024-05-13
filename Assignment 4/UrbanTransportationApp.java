@@ -77,8 +77,6 @@ class UrbanTransportationApp implements Serializable {
     public List<RouteDirection> getFastestRouteDirections(HyperloopTrainNetwork network) {
         List<RouteDirection> routeDirections = new ArrayList<>();
         
-        // TODO: Your code goes here
-
         Graph graph = new Graph();
 
         for (TrainLine line : network.lines) {
@@ -86,7 +84,7 @@ class UrbanTransportationApp implements Serializable {
 
             for (int i = 0; i < stations.size(); i++) {
                 Station station = stations.get(i);
-                Node node = new Node(line.trainLineName + " Line " + station.description, station.coordinates);
+                Node node = new Node(station.description, station.coordinates);
                 graph.addNode(node);
             }
         }
@@ -117,13 +115,13 @@ class UrbanTransportationApp implements Serializable {
                 Station station1 = stations.get(i);
                 Station station2 = stations.get(i + 1);
             
-                Node node1 = graph.findNodeInGraph(line.trainLineName + " Line " + station1.description);
-                Node node2 = graph.findNodeInGraph(line.trainLineName + " Line " + station2.description);
+                Node node1 = graph.findNodeInGraph(station1.description);
+                Node node2 = graph.findNodeInGraph(station2.description);
             
                 double distance = Math.sqrt(Math.pow(node1.coordinates.x - node2.coordinates.x, 2) + Math.pow(node1.coordinates.y - node2.coordinates.y, 2)); // distance in meters
-                double speedKmPerHour = network.averageTrainSpeed; // km/h
-                double speedMetersPerMinute = speedKmPerHour * 1000 / 60; // meters per minute
-                double time = distance / speedMetersPerMinute; 
+                double speed = network.averageTrainSpeed; // km/h
+                // double speedMetersPerMinute = speedKmPerHour * 1000 / 60; // meters per minute
+                double time = distance / speed; 
             
                 graph.addEdge(node1, node2, time);
             }
@@ -173,7 +171,10 @@ class UrbanTransportationApp implements Serializable {
             Node nextNode = previousNode.get(currentNode);
 
             if (nextNode != null) {
-                boolean trainRide = !(currentNode.getName().equals("Starting Point") || currentNode.getName().equals("Final Destination") || nextNode.getName().equals("Starting Point") || nextNode.getName().equals("Final Destination"));
+                String currentNodeLineName = currentNode.getName().split(" Line ")[0];
+                String nextNodeLineName = nextNode.getName().split(" Line ")[0];
+        
+                boolean trainRide = !(currentNode.getName().equals("Starting Point") || currentNode.getName().equals("Final Destination") || nextNode.getName().equals("Starting Point") || nextNode.getName().equals("Final Destination")) && currentNodeLineName.equals(nextNodeLineName);
                 RouteDirection routeDirection = new RouteDirection(nextNode.getName(), currentNode.getName(), distances.get(currentNode) - distances.get(nextNode), trainRide);
                 routeDirections.add(routeDirection);
             }

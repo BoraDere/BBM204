@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -71,7 +70,7 @@ public class HyperloopTrainNetwork implements Serializable {
         }
     }
     
-    public List<Station> getStations(String line) {
+    public List<Station> getStations(String line, String trainLineName) {
         List<Station> stations = new ArrayList<>();
     
         Pattern pattern = Pattern.compile("[\\t ]*\\([\\t ]*(\\d+)[\\t ]*,[\\t ]*(\\d+)[\\t ]*\\)[\\t ]*");
@@ -84,7 +83,7 @@ public class HyperloopTrainNetwork implements Serializable {
             int x = Integer.parseInt(matcher.group(1));
             int y = Integer.parseInt(matcher.group(2));
     
-            stations.add(new Station(new Point(x, y), "Station " + stationNumber));
+            stations.add(new Station(new Point(x, y), trainLineName + " Line Station " + stationNumber));
             stationNumber++;
         }
 
@@ -107,7 +106,7 @@ public class HyperloopTrainNetwork implements Serializable {
                 } 
 
                 else if (line.contains("train_line_stations")) {
-                    List<Station> stations = getStations(line);
+                    List<Station> stations = getStations(line, trainLineName);
                     trainLines.add(new TrainLine(trainLineName, stations));
                 }
         }
@@ -117,14 +116,12 @@ public class HyperloopTrainNetwork implements Serializable {
 
     public String readFile(String filename) {
         String content = "";
-
         try {
             content = new String(Files.readAllBytes(Paths.get(filename)));
         } 
-        catch (IOException e) {
+        catch (Exception e) {
             int nop = 0;
         }
-
         return content;
     }
 
@@ -139,22 +136,23 @@ public class HyperloopTrainNetwork implements Serializable {
 
         StringBuilder trainLinesAndStations = new StringBuilder();
 
-         for (String line : fileContent.split("\n")) {
-                if (line.contains("num_train_lines")) {
-                    numTrainLines = getIntVar("num_train_lines", line);
-                } 
-                else if (line.contains("starting_point")) {
-                    startPoint = new Station(getPointVar("starting_point", line), "Starting Point");
-                } 
-                else if (line.contains("destination_point")) {
-                    destinationPoint = new Station(getPointVar("destination_point", line), "Destination Point");
-                } 
-                else if (line.contains("average_train_speed")) {
-                    averageTrainSpeed = getDoubleVar("average_train_speed", line);
-                } 
-                else if (line.contains("train_line_name") || line.contains("train_line_stations")) {
-                    trainLinesAndStations.append(line).append("\n");
-                }
+        for (String line : fileContent.split("\n")) {
+            
+            if (line.contains("num_train_lines")) {
+                numTrainLines = getIntVar("num_train_lines", line);
+            } 
+            else if (line.contains("starting_point")) {
+                startPoint = new Station(getPointVar("starting_point", line), "Starting Point");
+            } 
+            else if (line.contains("destination_point")) {
+                destinationPoint = new Station(getPointVar("destination_point", line), "Final Destination");
+            } 
+            else if (line.contains("average_train_speed")) {
+                averageTrainSpeed = getDoubleVar("average_train_speed", line) * 1000 / 60;
+            } 
+            else if (line.contains("train_line_name") || line.contains("train_line_stations")) {
+                trainLinesAndStations.append(line).append("\n");
+            }
         }
 
         lines = getTrainLines(trainLinesAndStations.toString());
